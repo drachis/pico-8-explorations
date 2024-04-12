@@ -1,0 +1,149 @@
+pico-8 cartridge // http://www.pico-8.com
+version 42
+__lua__
+
+player1_score = 0
+player2_score = 0 
+ball =  {x=64, y=64, dx=2, dy=2, size=4}
+paddle1 = {y = 60, height = 20, color = 8, default_color = 8, hit_timer = 0}
+paddle2 = {y = 60, height = 20, color = 9, default_color = 9, hit_timer = 0}
+paddle_width=4
+paddle_speed=2
+
+-- Initial colors
+paddle_hit_color = 11 -- Bright yellow
+
+function _init()
+    -- initialization
+end
+
+function _draw()
+    cls(0)  -- Clear the screen with color 0 (black)
+    -- Dashed line
+    for line_y = 0, 127, 8 do
+        rectfill(63, line_y, 64, line_y + 4, 7)
+    end
+  -- Draw paddles
+    rect(5, paddle1.y, 5 + paddle_width, paddle1.y + paddle1.height, paddle1.color)
+    rect(122 - paddle_width, paddle2.y, 122, paddle2.y + paddle2.height, paddle2.color)
+
+    -- Draw the ball
+    rectfill(ball.x - ball.size / 2, ball.y - ball.size / 2, 
+             ball.x + ball.size / 2, ball.y + ball.size / 2, 9)  -- Ball
+    
+    -- Draw the scores
+    print(player1_score, 30, 10, 7)  -- Player 1 score on the left
+    print(player2_score, 90, 10, 7)  -- Player 2 score on the right
+end
+
+function _update()
+    ball.x += ball.dx
+    ball.y += ball.dy
+
+    -- Ball bouncing off the top and bottom edges
+    if ball.y - ball.size/2 <= 0 or ball.y + ball.size/2 >= 127 then
+        ball.dy *= -1
+        -- Manually clamping the ball position
+        ball.y = max(ball.size/2, min(ball.y, 127 - ball.size/2))
+    end
+
+    handle_paddle_collision(paddle1, 5, 10)
+    handle_paddle_collision(paddle2, 122 - paddle_width, 122)
+
+    update_paddle_color(paddle1)
+    update_paddle_color(paddle2)
+
+    control_paddles()
+
+    -- Check for out of bounds to reset ball and update score
+    if ball.x < 0 then
+        player2_score += 1
+        reset_ball()
+    elseif ball.x > 127 then
+        player1_score += 1
+        reset_ball()
+    end
+end
+
+function control_paddles()
+    -- Player 1 controls (W and S)
+    if btn(2, 1) and paddle1.y > 0 then
+        paddle1.y -= paddle_speed
+    end
+    if btn(3, 1) and paddle1.y + paddle1.height < 127 then
+        paddle1.y += paddle_speed
+    end
+    -- Ensure paddle stays within the screen
+    paddle1.y = max(0, min(paddle1.y, 127 - paddle1.height))
+
+    -- Player 2 controls (Arrow Keys)
+    if btn(2, 0) and paddle2.y > 0 then
+        paddle2.y -= paddle_speed
+    end
+    if btn(3, 0) and paddle2.y + paddle2.height < 127 then
+        paddle2.y += paddle_speed
+    end
+    -- Ensure paddle stays within the screen
+    paddle2.y = max(0, min(paddle2.y, 127 - paddle2.height))
+end
+
+
+function reset_ball()
+    ball.x = 64
+    ball.y = 64
+    -- Randomize horizontal direction with equal probability of left or right
+    ball.dx = rnd(2) < 1 and -2 or 2
+    -- Randomize vertical direction with a small initial value to avoid immediate edge collision
+    local angle = rnd(0.4) - 0.2  -- Small angle variation
+    ball.dy = 2 * angle
+    -- Ensure the initial vertical movement isn't too flat to avoid immediate teleport to paddles
+    if abs(ball.dy) < 1 then
+        ball.dy = ball.dy < 0 and -1 or 1
+    end
+end
+
+function handle_paddle_collision(paddle, x_min, x_max)
+    local ball_left = ball.x - ball.size/2
+    local ball_right = ball.x + ball.size/2
+    local ball_top = ball.y - ball.size/2
+    local ball_bottom = ball.y + ball.size/2
+
+    -- Only check for a collision if the paddle's hit_timer is 0
+    if paddle.hit_timer == 0 and
+       ((ball.dx < 0 and ball_right > x_min and ball_left < x_max) or
+        (ball.dx > 0 and ball_left < x_max and ball_right > x_min)) and
+       ball_bottom > paddle.y and ball_top < paddle.y + paddle.height then
+        
+        ball.dx *= -1  -- Reverse the horizontal direction
+        local hit_pos = (ball.y - (paddle.y + paddle.height / 2)) / (paddle.height / 2)
+        ball.dy = hit_pos * 2  -- Adjust the vertical direction based on hit position
+
+        -- Reposition the ball to prevent sticking
+        if ball.dx > 0 then
+            ball.x = x_min - ball.size / 2 - 1
+        else
+            ball.x = x_max + ball.size / 2 + 1
+        end
+
+        -- Update the paddle's color and start the hit timer
+        paddle.color = paddle_hit_color
+        paddle.hit_timer = 30  -- Start or reset the hit timer
+
+    end
+
+    -- Decrement the hit_timer if it is greater than 0
+    if paddle.hit_timer > 0 then
+        paddle.hit_timer -= 1
+    end
+end
+
+
+
+
+function update_paddle_color(paddle)
+    if paddle.hit_timer > 0 then
+        paddle.hit_timer -= 1  -- Decrement the timer
+    else
+        paddle.color = paddle.default_color  -- Restore the default color
+    end
+end
