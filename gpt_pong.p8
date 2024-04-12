@@ -116,10 +116,10 @@ function handle_paddle_collision(paddle, x_min, x_max)
         
         ball.dx *= -1  -- Reverse the horizontal direction
         local hit_pos = (ball.y - (paddle.y + paddle.height / 2)) / (paddle.height / 2)
-        ball.dy = hit_pos * 2  -- Adjust the vertical direction based on hit position
+        ball.dy = ball.dy + hit_pos  -- Adjust the vertical direction based on hit position
 
         -- Reposition the ball to prevent sticking
-        if ball.dx > 0 then
+        if ball.dx < 0 then
             ball.x = x_min - ball.size / 2 - 1
         else
             ball.x = x_max + ball.size / 2 + 1
@@ -136,9 +136,6 @@ function handle_paddle_collision(paddle, x_min, x_max)
         paddle.hit_timer -= 1
     end
 end
-
-
-
 
 function update_paddle_color(paddle)
     if paddle.hit_timer > 0 then
