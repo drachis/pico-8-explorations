@@ -1,7 +1,6 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-
 ball =  {x=64, y=64, dx=2, dy=2, size=4, maxspeed=6, color=0, color_active = 7, color_inactive=5}
 paddle1 = {y = 60, height = 20, color = 14, colorfill=2, default_color = 14, hit_timer = 0, hit=false, score=0,score_timer=0}
 paddle2 = {y = 60, height = 20, color = 12, colorfill=1, default_color = 12, hit_timer = 0, hit=false, score=0,score_timer=0}
@@ -11,6 +10,7 @@ paddle_speed=2
     
 function _init()
     reset_ball()
+    music(0,nil,2)
     -- initialization
 end
 
@@ -80,12 +80,14 @@ function _update()
         if paddle2.hit then  -- Check if player 2 has hit the ball
             paddle2.score += 1
             paddle2.score_timer = 15
+            sfx(2)
         end
         reset_ball()
     elseif ball.x > 127 then
         if paddle1.hit then  -- Check if player 1 has hit the ball
             paddle1.score += 1
             paddle1.score_timer = 15
+            sfx(2)
         end
         reset_ball()
     end
@@ -167,9 +169,8 @@ function handle_paddle_collision(paddle, x_min, x_max)
         paddle.color = paddle.colorfill
         paddle.hit_timer = 15  -- Start or reset the hit timer
         paddle.hit = true  -- Set the hit flag for this paddle
-
+        sfx(0)
     end
-
     -- Decrement the hit_timer if it is greater than 0
     if paddle.hit_timer > 0 then
         paddle.hit_timer -= 1
@@ -312,4 +313,16 @@ __label__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+__sfx__
+480100001f372213702c00020000070000400002000000000000002000030000000000000000000000018000110000e0000d0000c0000b0000a00000000000000000001000000000000002000000000000000000
+00040000306102f62000600052000020025100001001c100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000e0000304103443037430374300d200352002f200282001f2003220029500295003a10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000400002dc6030c6034c6039c6037c6034c6030c602dc6034c6037c6039c6037c6034c6030c602dc6034c602dc6030c6034c6039c6037c6034c6030c6039c6034c6037c6039c6037c6034c6030c602dc6033c60
+__music__
+03 41420344
+00 41424344
+00 41424344
+03 41424344
+00 01424344
 
