@@ -3,23 +3,25 @@ version 42
 __lua__
 
 paddle1 = {
+    x=11+5+10,
+    y=56,
+    h=18,
+    w=2,
+    speed=4,
+    color=9,
+    score=0,
+    score_x=10,
+    score_y=2
+}
+paddle2= {
     x=117-5,
     y=56,
     h=18,
     w=2,
-    color=9,
-    score=0,
-    score_x=118,
-    score_y=2
-}
-paddle2= {
-    x=11+5,
-    y=56,
-    h=18,
-    w=2,
+    speed=2,
     color=4,
     score=0,
-    score_x=10,
+    score_x=118,
     score_y=2
 }
 court = {
@@ -32,10 +34,10 @@ court = {
 ball = {
     x=128/2,
     y=128/2,
-    dx=4,
-    dy=2,
-    radius=2,
-    color=6
+    dx=2,
+    dy=1,
+    r=2,
+    color=5
 }
 centerline={
     x0=128/2,
@@ -77,7 +79,7 @@ function _draw()
     circfill(
         ball.x,
         ball.y,
-        ball.radius,
+        ball.r,
         ball.color
     )
     print(
@@ -96,20 +98,55 @@ function _draw()
     print(ball.y, 16,26,7)
 end
 function _update()
+    -- ball things
     ball.x += ball.dx
     ball.y += ball.dy
+    -- ball conllision with court
+    if ball.x+ball.r+2 > court.x1 then
+        ball.dx *= -1
+        paddle1.score +=3
+    end
+    if ball.x-ball.r-2 < court.x0 then
+        ball.dx *= -1
+        paddle2.score +=0
+    end
+    if ball.y+ball.r+2 > court.y1 then
+        ball.dy *= -1 
+    end
+    if ball.y-ball.r-2 < court.y0 then
+        ball.dy *= -1 
+    end
 
-    if ball.x > court.x1 then
+    --paddle 1 collide
+    if ball.x - ball.r - 2  < paddle1.x and 
+        ball.y>paddle1.y and 
+        ball.y<paddle1.y+paddle1.h and
+        ball.dx < 0 then
         ball.dx *= -1
+        ball.color=8
     end
-    if ball.x < court.x0 then
+
+    -- paddle 2 hit
+    if ball.x + ball.r + 2  > paddle2.x and 
+        ball.y>paddle2.y and 
+        ball.y<paddle2.y+paddle2.h and
+        ball.dx > 0 then
         ball.dx *= -1
+        ball.color=9
     end
-    if ball.y > court.y1 then
-        ball.dy *= -1 
+
+    if btn(2,1) and paddle1.y>court.y0+2 then
+        paddle1.y-=paddle1.speed
     end
-    if ball.y < court.y0 then
-        ball.dy *= -1 
+    if btn(3,1) and paddle1.y+paddle1.h<court.y1-2 then
+        paddle1.y+=paddle1.speed
+    end
+
+    if btn(2,0) and paddle2.y>court.y0+2 then
+        paddle2.y-=paddle2.speed
+    end
+    if btn(3,0) and paddle2.y+paddle2.h<court.y1-2 then
+        paddle2.y+=paddle2.speed
     end
 end
 
