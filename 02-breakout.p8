@@ -187,7 +187,7 @@ function draw_bricks()
     for i, brick in ipairs(bricks) do
         if not brick.hit then
             -- Draw each active brick
-            rectfill(brick.x, brick.y, brick.x + brick.width, brick.y + brick.height, 9) -- Color 9 is orange
+            rectfill(brick.x, brick.y, brick.x + brick.width, brick.y + brick.height, 9+i%7) -- Color 9 is orange
         end
     end
 end
