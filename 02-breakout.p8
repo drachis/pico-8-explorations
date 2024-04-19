@@ -40,7 +40,7 @@ function draw_ball()
     circfill(ball.x, ball.y, ball.size, ball.color)
 end
 function create_bricks()
-    bricks[1]
+    local idx = [1]
 end
 
 function draw_ball()
