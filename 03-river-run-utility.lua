@@ -6,6 +6,10 @@ __lua__
 
 -- Helper function to check collision between two entities
     function collides(a, b)
+        printh(a.type.." A width ".. a.width..
+            " A height "..a.height)
+        printh(b.type.." B width "..b.width..
+            " B height"..b.height)
         return a.x < b.x + b.width and
                b.x < a.x + a.width and
                a.y < b.y + b.height and
