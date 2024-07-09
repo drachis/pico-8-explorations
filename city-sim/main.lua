@@ -1,29 +1,30 @@
+-- main.p8
+#include map.p8
+#include placement.p8
+#include resources.p8
+#include demand.p8
+#include ui.p8
+#include agents.p8
+
 function _init()
-    map = require("map")
-    placement = require("placement")
-    resources = require("resources")
-    demand = require("demand")
-    ui = require("ui")
-    agents = require("agents")
-    
-    map.init_map()
-    resources.init_resources()
-    demand.init_demand()
-    ui.init_ui()
+    init_map()
+    init_resources()
+    init_demand()
+    init_ui()
 end
 
 function _update()
-    ui.update_cursor()
-    placement.update_placement()
-    demand.update_demand()
-    resources.update_resources()
-    agents.update_agents()
+    update_cursor()
+    update_placement()
+    update_demand()
+    update_resources()
+    update_agents()
 end
 
 function _draw()
     cls()
-    map.draw_map()
-    placement.draw_zones()
-    ui.draw_cursor()
-    ui.draw_ui()
+    draw_map()
+    draw_zones()
+    draw_cursor()
+    draw_ui()
 end

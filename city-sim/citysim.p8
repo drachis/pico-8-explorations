@@ -1,4 +1,1 @@
-pico-8 cartridge // http://www.pico-8.com
-version 42
-__lua__
--- city builder
+load main.p8

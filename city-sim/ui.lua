@@ -1,27 +1,23 @@
-local ui = {}
-
-function ui.init_ui()
-    ui.cursor_x, ui.cursor_y = 1, 1
+-- ui.p8
+function init_ui()
+    cursor_x = 1
+    cursor_y = 1
+    selected_zone_type = RESIDENTIAL -- Default to Residential
 end
 
-function ui.update_cursor()
-    if btnp(0) then ui.cursor_y -= 1 end
-    if btnp(1) then ui.cursor_y += 1 end
-    if btnp(2) then ui.cursor_x -= 1 end
-    if btnp(3) then ui.cursor_x += 1 end
-
-    ui.cursor_x = mid(1, ui.cursor_x, map.width)
-    ui.cursor_y = mid(1, ui.cursor_y, map.height)
+function update_cursor()
+    if btnp(0) then cursor_y = max(1, cursor_y - 1) end
+    if btnp(1) then cursor_y = min(map_height, cursor_y + 1) end
+    if btnp(2) then cursor_x = max(1, cursor_x - 1) end
+    if btnp(3) then cursor_x = min(map_width, cursor_x + 1) end
 end
 
-function ui.draw_cursor()
-    rect(ui.cursor_x * 8, ui.cursor_y * 8, ui.cursor_x * 8 + 7, ui.cursor_y * 8 + 7, 7)
+function draw_cursor()
+    rect((cursor_x-1)*8, (cursor_y-1)*8, cursor_x*8-1, cursor_y*8-1, 7)
 end
 
-function ui.draw_ui()
-    print("Money: "..resources.money, 0, 0)
-    print("Population: "..resources.population, 0, 10)
-    print("Demand - R: "..demand.R.." C: "..demand.C.." I: "..demand.I, 0, 20)
+function draw_ui()
+    print("Money: "..money, 0, 0, 7)
+    print("Population: "..population, 0, 10, 7)
+    print("Demand - R: "..demand_R.." C: "..demand_C.." I: "..demand_I, 0, 20, 7)
 end
-
-return ui
