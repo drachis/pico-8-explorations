@@ -1,7 +1,6 @@
--- placement.lua
 function is_developed(x, y)
     local zone_type = map_grid[y][x]
-    return zone_type == 4 -- Road or any developed zone
+    return zone_type == 4 or zone_type > 5 -- Road or any developed zone
 end
 
 function place_zone(x, y, zone_type)
@@ -37,7 +36,13 @@ function draw_zones()
                 elseif zone_type == 3 then
                     rectfill((x-1)*8, (y-1)*8, x*8-1, y*8-1, 8) -- Brown for unpopulated industrial
                 elseif zone_type == 4 then -- Road
-                    rectfill((x-1)*8, (y-1)*8, x*8-1, y*8-1, 7) -- Grey for road
+                    rectfill((x-1)*8, (y-1)*8, x*8-1, y*8-1, 6) -- Grey for road
+                elseif zone_type == 6 then -- Filled in residential
+                    rectfill((x-1)*8, (y-1)*8, x*8-1, y*8-1, 11) -- Bright green for filled residential
+                elseif zone_type == 7 then -- Filled in commercial
+                    rectfill((x-1)*8, (y-1)*8, x*8-1, y*8-1, 12) -- Bright blue for filled commercial
+                elseif zone_type == 9 then -- Filled in industrial
+                    rectfill((x-1)*8, (y-1)*8, x*8-1, y*8-1, 9) -- Bright yellow for filled industrial
                 end
             end
         end

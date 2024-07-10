@@ -46,6 +46,10 @@ function draw_ui()
     end
     print("Selected: "..zone_name, 0, 30, 7)
     local days = {"M", "T", "W", "H", "F", "S", "U"}
-    print("Day: "..days[day_of_week], 112, 0, 7)
-    print("Time: "..string.format("%02d", hour_of_day)..":00", 112, 10, 7)
+    print("Day: "..days[day_of_week], 96, 0, 7)
+    local hour_str = tostr(hour_of_day)
+    if #hour_str < 2 then
+        hour_str = "0"..hour_str
+    end
+    print("Time: "..hour_str..":00", 96, 10, 7)
 end

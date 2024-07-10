@@ -9,6 +9,7 @@ __lua__
 #include demand.lua
 #include ui.lua
 #include agents.lua
+#include pathfinding.lua
 
 function _init()
     init_map()
@@ -24,6 +25,7 @@ function _update()
     update_demand()
     update_resources()
     update_agents()
+    update_time()
 end
 
 function _draw()
@@ -34,7 +36,6 @@ function _draw()
     draw_cursor()
     draw_ui()
 end
-
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
