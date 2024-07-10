@@ -1,20 +1,17 @@
-local resources = {}
-
-function resources.init_resources()
-    resources.money = 1000
-    resources.population = 0
+-- resources.lua
+function init_resources()
+    money = 1000
+    population = 0
 end
 
-function resources.adjust_resources_for_new_zone(zone_type)
-    if zone_type == "R" then
-        resources.population += 10
-    elseif zone_type == "C" or zone_type == "I" then
-        resources.money += 100
+function adjust_resources_for_new_zone(zone_type)
+    if zone_type == 1 then -- Residential
+        population += 10
+    elseif zone_type == 2 or zone_type == 3 then -- Commercial or Industrial
+        money += 100
     end
 end
 
-function resources.update_resources()
+function update_resources()
     -- Implement any resource update logic here
 end
-
-return resources
