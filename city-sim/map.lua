@@ -1,4 +1,4 @@
--- map.p8
+-- map.lua
 function init_map()
     map_width = 20
     map_height = 15
@@ -19,4 +19,9 @@ function draw_map()
             end
         end
     end
+end
+
+function is_developed(x, y)
+    local zone_type = map_grid[y][x]
+    return zone_type == 4 -- Road or any developed zone
 end

@@ -1,6 +1,15 @@
 -- placement.lua
+function is_developed(x, y)
+    local zone_type = map_grid[y][x]
+    return zone_type == 4 -- Road or any developed zone
+end
+
 function place_zone(x, y, zone_type)
-    if map_grid[y][x] == 0 or zone_type == 5 then -- Clear the zone
+    if (map_grid[y][x] == 0) or (zone_type ~= map_grid[y][x] and not is_developed(x, y)) then
+        if map_grid[y][x] ~= 0 and is_developed(x, y) then
+            -- Cost to remove a developed tile
+            money -= 10
+        end
         map_grid[y][x] = (zone_type == 5) and 0 or zone_type
         if zone_type ~= 5 then
             adjust_resources_for_new_zone(zone_type)
@@ -9,10 +18,10 @@ function place_zone(x, y, zone_type)
 end
 
 function update_placement()
-    if btnp(4) then -- A button for select/confirm
+    if btnp(4) then -- A button (Z) for select/confirm
         place_zone(cursor_x, cursor_y, selected_zone_type)
-    elseif btnp(5) then -- B button for rotate zone type
-        selected_zone_type = (selected_zone_type % 5) + 1
+    elseif btnp(5) then -- B button (X) for rotate zone type
+        selected_zone_type = (selected_zone_type % 5) + 1 -- Cycle through 1 to 4
     end
 end
 

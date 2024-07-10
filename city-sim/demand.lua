@@ -6,9 +6,9 @@ function init_demand()
 end
 
 function update_demand()
-    demand_R = 50 + (map_count(RESIDENTIAL) - map_count(COMMERCIAL)) * 2
-    demand_C = 50 + (map_count(COMMERCIAL) - map_count(INDUSTRIAL)) * 2
-    demand_I = 50 + (map_count(INDUSTRIAL) - map_count(RESIDENTIAL)) * 2
+    demand_R = 50 + (map_count(1) - map_count(2)) * 2
+    demand_C = 50 + (map_count(2) - map_count(3)) * 2
+    demand_I = 50 + (map_count(3) - map_count(1)) * 2
 end
 
 function map_count(zone_type)

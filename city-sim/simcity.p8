@@ -15,6 +15,7 @@ function _init()
     init_resources()
     init_demand()
     init_ui()
+    init_agents()
 end
 
 function _update()
@@ -29,9 +30,11 @@ function _draw()
     cls()
     draw_map()
     draw_zones()
+    draw_agents()
     draw_cursor()
     draw_ui()
 end
+
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
