@@ -3,7 +3,6 @@
 function find_path(start_x, start_y, goal_x, goal_y, grid)
     local open_set = {{x=start_x, y=start_y, g=0, h=heuristic(start_x, start_y, goal_x, goal_y), parent=nil}}
     local closed_set = {}
-    local came_from = {}
     local goal = {x=goal_x, y=goal_y}
 
     while #open_set > 0 do
@@ -15,7 +14,9 @@ function find_path(start_x, start_y, goal_x, goal_y, grid)
 
         add(closed_set, current)
 
-        for neighbor in all(get_neighbors(current, grid)) do
+        local neighbors = get_neighbors(current, grid)
+        for i=1, #neighbors do
+            local neighbor = neighbors[i]
             if not in_set(neighbor, closed_set) then
                 local tentative_g = current.g + 1
 
@@ -54,7 +55,8 @@ function get_neighbors(node, grid)
 end
 
 function in_set(node, set)
-    for n in all(set) do
+    for i=1, #set do
+        local n = set[i]
         if n.x == node.x and n.y == node.y then
             return true
         end
