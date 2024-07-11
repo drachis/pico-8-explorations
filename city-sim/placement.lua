@@ -1,3 +1,27 @@
+-- placement.lua
+
+function place_tile(x, y, tile_type)
+    -- Ensure we place a tile of the specified type
+    map_grid[y][x] = tile_type
+    -- Update all agent paths
+    update_all_paths()
+end
+
+function remove_tile(x, y)
+    -- Ensure we remove the tile
+    map_grid[y][x] = 0
+    -- Update all agent paths
+    update_all_paths()
+end
+
+function update_all_paths()
+    for agent in all(agents) do
+        if agent.target then
+            agent.path = find_path(agent.x, agent.y, agent.target.x, agent.target.y, map_grid)
+        end
+    end
+end
+
 function is_developed(x, y)
     local zone_type = map_grid[y][x]
     return zone_type == 4 or zone_type > 5 -- Road or any developed zone

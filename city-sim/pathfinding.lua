@@ -1,90 +1,142 @@
--- pathfinding.lua
+-- Constants
+local ROAD = 0
+local RESIDENTIAL = 1
+local COMMERCIAL = 2
+local INDUSTRIAL = 3
+local MAX_PATH_LENGTH = 32
+local MAX_ITERATIONS = 16
 
-function find_path(start_x, start_y, goal_x, goal_y, grid)
-    local open_set = {{x=start_x, y=start_y, g=0, h=heuristic(start_x, start_y, goal_x, goal_y), parent=nil}}
-    local closed_set = {}
-    local goal = {x=goal_x, y=goal_y}
-
-    while #open_set > 0 do
-        local current = remove_first(open_set)
-
-        if current.x == goal.x and current.y == goal.y then
-            return reconstruct_path(current)
-        end
-
-        add(closed_set, current)
-
-        local neighbors = get_neighbors(current, grid)
-        for i=1, #neighbors do
-            local neighbor = neighbors[i]
-            if not in_set(neighbor, closed_set) then
-                local tentative_g = current.g + 1
-
-                if not in_set(neighbor, open_set) or tentative_g < neighbor.g then
-                    neighbor.g = tentative_g
-                    neighbor.h = heuristic(neighbor.x, neighbor.y, goal.x, goal.y)
-                    neighbor.parent = current
-
-                    if not in_set(neighbor, open_set) then
-                        add(open_set, neighbor)
-                    end
-                end
-            end
-        end
-
-        sort_by_f(open_set)
-    end
-
-    return nil -- No path found
-end
-
-function heuristic(x1, y1, x2, y2)
-    return abs(x1 - x2) + abs(y1 - y2)
-end
-
-function get_neighbors(node, grid)
+-- Helper function to get neighboring cells
+local function get_neighbors(grid, x, y)
     local neighbors = {}
-    local x, y = node.x, node.y
-
-    if x > 1 and grid[y][x-1] ~= 0 then add(neighbors, {x=x-1, y=y}) end
-    if x < #grid[1] and grid[y][x+1] ~= 0 then add(neighbors, {x=x+1, y=y}) end
-    if y > 1 and grid[y-1][x] ~= 0 then add(neighbors, {x=x, y=y-1}) end
-    if y < #grid and grid[y+1][x] ~= 0 then add(neighbors, {x=x, y=y+1}) end
-
+    local directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+    for _, dir in pairs(directions) do
+        local nx, ny = x + dir[1], y + dir[2]
+        if nx >= 1 and nx <= #grid[1] and ny >= 1 and ny <= #grid then
+            table.insert(neighbors, {x = nx, y = ny})
+        end
+    end
     return neighbors
 end
 
-function in_set(node, set)
-    for i=1, #set do
-        local n = set[i]
-        if n.x == node.x and n.y == node.y then
+-- Heuristic function (Manhattan distance)
+local function heuristic(a, b)
+    return abs(a.x - b.x) + abs(a.y - b.y)
+end
+
+-- Find node with lowest f score in open set
+local function find_lowest_f_score(open_set)
+    local lowest_index = 1
+    for i = 2, #open_set do
+        if open_set[i].f < open_set[lowest_index].f then
+            lowest_index = i
+        end
+    end
+    return lowest_index
+end
+
+-- Check if a node is in the closed set
+local function in_closed_set(closed_set, node)
+    for _, closed_node in pairs(closed_set) do
+        if closed_node.x == node.x and closed_node.y == node.y then
             return true
         end
     end
     return false
 end
 
-function sort_by_f(set)
-    for i=1, #set-1 do
-        for j=i+1, #set do
-            if (set[i].g + set[i].h) > (set[j].g + set[j].h) then
-                set[i], set[j] = set[j], set[i]
+-- Check if a cell is valid for pathfinding
+local function is_valid_cell(grid, node, start, goal)
+    local cell_type = grid[node.y][node.x]
+    return cell_type == ROAD or 
+           (node.x == start.x and node.y == start.y) or 
+           (node.x == goal.x and node.y == goal.y)
+end
+
+-- Update or add neighbor to open set
+local function update_open_set(open_set, neighbor, g_score, h_score, current)
+    for _, open_node in pairs(open_set) do
+        if open_node.x == neighbor.x and open_node.y == neighbor.y then
+            if g_score < open_node.g then
+                open_node.g = g_score
+                open_node.f = g_score + h_score
+                open_node.parent = current
             end
+            return true
         end
     end
+    table.insert(open_set, {
+        x = neighbor.x, y = neighbor.y, 
+        g = g_score, h = h_score, 
+        f = g_score + h_score, 
+        parent = current
+    })
+    return false
 end
 
-function reconstruct_path(node)
+-- Reconstruct path from goal to start
+local function reconstruct_path(goal)
     local path = {}
-    while node do
-        add(path, 1, {x=node.x, y=node.y})
-        node = node.parent
+    local current = goal
+    while current and #path < MAX_PATH_LENGTH do
+        table.insert(path, 1, {x = current.x, y = current.y})
+        current = current.parent
     end
-    return path
+    return #path <= MAX_PATH_LENGTH and path or nil
 end
 
-function remove_first(set)
-    local first = set[1]
-    deli(set, 1)
-    return first
+-- A* pathfinding function
+function find_path(grid, start, goal)
+    local open_set = {{x = start.x, y = start.y, g = 0, h = heuristic(start, goal), f = 0, parent = nil}}
+    local closed_set = {}
+    local iterations = 0
+    
+    while #open_set > 0 and iterations < MAX_ITERATIONS do
+        iterations += 1
+        local current_index = find_lowest_f_score(open_set)
+        local current = open_set[current_index]
+        
+        if current.x == goal.x and current.y == goal.y then
+            return reconstruct_path(current)
+        end
+        
+        table.remove(open_set, current_index)
+        table.insert(closed_set, current)
+        
+        for _, neighbor in pairs(get_neighbors(grid, current.x, current.y)) do
+            if in_closed_set(closed_set, neighbor) then goto continue end
+            if not is_valid_cell(grid, neighbor, start, goal) then goto continue end
+            
+            local g_score = current.g + 1
+            local h_score = heuristic(neighbor, goal)
+            
+            update_open_set(open_set, neighbor, g_score, h_score, current)
+            
+            ::continue::
+        end
+    end
+    
+    return nil  -- No path found or limits exceeded
+end
+
+-- Example usage
+local grid = {
+    {ROAD, ROAD, RESIDENTIAL, ROAD},
+    {ROAD, COMMERCIAL, ROAD, ROAD},
+    {RESIDENTIAL, ROAD, ROAD, INDUSTRIAL},
+    {ROAD, ROAD, RESIDENTIAL, ROAD}
+}
+
+local start = {x = 1, y = 1}
+local goal = {x = 4, y = 3}
+
+local path = find_path(grid, start, goal)
+
+if path then
+    print("Path found:")
+    for _, point in pairs(path) do
+        print("(" .. point.x .. ", " .. point.y .. ")")
+    end
+else
+    print("No path found or limits exceeded")
 end
