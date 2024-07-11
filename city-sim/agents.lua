@@ -23,13 +23,30 @@ function spawn_agent()
 end
 
 function move_along_path(agent)
-    if agent.path and #agent.path > 0 then
-        local next_step = agent.path[#agent.path] -- Get the last element (next step)
-        agent.x = next_step.x
-        agent.y = next_step.y
-        del(agent.path, next_step) -- Remove the last element
+    if not agent.path or #agent.path == 0 then return end -- No path or empty path, do nothing
+
+    local current_position = {x = agent.x, y = agent.y} -- Store the current position
+    for direction = 1, 2 do -- Loop twice: once forward and once backward
+        for i, pos in ipairs(agent.path) do
+            if direction == 1 then -- Forward movement (start-to-target)
+                if current_position.x ~= pos[1] or current_position.y ~= pos[2] then
+                    -- Move to the next position in the path
+                    agent.x = pos[1]
+                    agent.y = pos[2]
+                    break
+                end
+            else -- Backward movement (target-to-start)
+                if current_position.x ~= pos[1] or current_position.y ~= pos[2] then
+                    -- Move to the previous position in the path (by reversing the loop)
+                    agent.x = pos[1]
+                    agent.y = pos[2]
+                    break
+                end
+            end
+        end
     end
 end
+
 
 function update_agents()
     spawn_timer += 1
