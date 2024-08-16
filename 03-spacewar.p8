@@ -6,11 +6,12 @@ __lua__
 
 function _init()
     make_player()
-    make_enemies(4)
+    make_enemies(16)
 end
 
 function _update()
     move_player()
+    move_enemies()
 end
 
 function _draw()
@@ -23,14 +24,22 @@ function make_enemies(number)
     enemy_sprites = {2,3,4}
     x = 0 
     y = 0
-
     enemies = {}
     for i=1,number,1 do
-        if (x>128) 
+        if (x>128) do
             y+=16
             x=0
-        enemies[#enemies+1]= {["sprite"]=rnd(enemy_sprites), ["x"]=x, ["y"]=y, ["direction"] = "xplus" }
+        end
+        enemies[#enemies+1]= {["sprite"]=rnd(enemy_sprites), ["x"]=x, ["y"]=y, ["direction"] = enemy_direction(y), ["target_row"]=y  }
         x += 16
+    end
+end
+
+function enemy_direction(y)
+    if (y%32 == 0) do 
+        return "xplus"
+    else 
+        return "xminus"
     end
 end
 
@@ -40,10 +49,24 @@ end
 
 function move_enemy(enemy)
     movement = {
-        ["xplus"] = 4,
-        ["xminus"] = 4,
-        ["yplus"] = 6,
+        ["x"] = 1,
+        ["y"] = 1,
     }
+    if (enemy.direction == "xminus") enemy.x -= movement.x
+    if (enemy.direction == "xplus") enemy.x += movement.x
+    if (enemy.direction == "yplus") enemy.y += movement.y 
+    if (enemy.direction != "yplus" and enemy.target_row >= enemy.y) do
+        if (enemy.x >= 120 or enemy.x <= 0) do
+            enemy.direction = "yplus"
+            enemy.target_row+=16
+        end
+    end
+    
+    if (enemy.y>=enemy.target_row) do
+        if (enemy.x >= 120 ) enemy.direction = "xminus" enemy.x =120
+        if (enemy.x <= 0) enemy.direction = "xplus" enemy.x =0
+    end
+    print(enemy.direction)
 end
 
 function draw_enemies()
