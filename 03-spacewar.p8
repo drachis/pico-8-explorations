@@ -47,6 +47,7 @@ end
 function update_enemies()
     to_delete = {}
     for edx = #enemies, -1 do
+        printh("")
         movement = {
             ["x"] = 1,
             ["y"] = 1
