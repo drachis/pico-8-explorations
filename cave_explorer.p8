@@ -23,9 +23,9 @@ function _draw()
 
 	if ( game_over) then
 		print("game over!", 44,44,7)
-		print "your score:".player.score, 34,54,7
+		print("your score:"..player.score, 34,54,7)
 	else
-		print("score:".player.score,2,2,7)
+		print("score:"..player.score,2,2,7)
 	end
 end
 
