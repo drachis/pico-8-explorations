@@ -19,7 +19,7 @@ card_types = {"a", "m", "d"}
 
 function _init()
   init_deck()
-  draw_hand()
+  deal_hand()
 end
 
 function _update()
@@ -46,7 +46,7 @@ end
 function _draw()
   cls()
   draw_grid()
-  draw_hand()
+  display_hand()
   draw_ui()
 end
 
@@ -67,7 +67,7 @@ function shuffle(t)
   end
 end
 
-function draw_hand()
+function deal_hand()
   while #hand < 5 and (#deck > 0 or #discard > 0) do
     if #deck == 0 then
       deck, discard = discard, deck
@@ -78,7 +78,7 @@ function draw_hand()
 end
 
 function play_card()
-  if selected and energy > 0 then
+  if selected and energy > 0 and #hand > 0 then
     local card = hand[selected]
     add(discard, del(hand, selected))
     energy -= 1
@@ -93,15 +93,15 @@ function play_card()
       -- defend
     end
     
-    selected = nil
+    selected = min(selected, #hand)
     if energy == 0 then turn = "enemy" end
-    draw_hand()
+    deal_hand()
   end
 end
 
 function end_turn()
   energy = 3
-  draw_hand()
+  deal_hand()
   turn = "enemy"
 end
 
@@ -132,7 +132,7 @@ function draw_grid()
   circfill(enemy.x*12+6, enemy.y*12+6, 5, 8)
 end
 
-function draw_hand()
+function display_hand()
   for i=1,#hand do
     local x = ((i-1)%3)*20 + 44
     local y = flr((i-1)/3)*20 + 50
