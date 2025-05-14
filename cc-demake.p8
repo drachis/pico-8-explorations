@@ -20,6 +20,7 @@ card_types = {"a", "m", "d"}
 function _init()
   init_deck()
   deal_hand()
+
 end
 
 function _update()

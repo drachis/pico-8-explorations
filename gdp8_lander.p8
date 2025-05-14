@@ -59,7 +59,7 @@ function check_land()
     end
 end
 
-function rndb(high, low)
+function rndb(high, low)    
     if high < low do  --flip high and low if low is actually high.
         local _low = low
         low = high
