@@ -1,0 +1,160 @@
+Steven Lin
+incorporating ai into all parts of the game dev pipline where we can increase quality and reduce costs. 
+success in proc generation, props, env, modular kits
+explored, marketing art, coding / copilot, storyboards, cinematics
+
+sucess vs explored
+not everythign is pressing. - Steven Lin, like that line
+few art folks who have been able to keep the big picture in mind. 
+
+3rd party software teaam to save 3-4min cahracter creation costs through gen ai
+front back images -> chracter w/ model & textures, close to rigging and skinning
+- result of 4w sprint, 8H meetings + work, redid entire IP. 40 in game models by EoM
+- small vs large team
+    - important to recognzie prioritization, and understand where work fits in the whole. 
+    - if narrative models are finishd then helps not just narrative but also concept art, vfx, ect teams. 
+- additional exploration
+- skinning and rigging portions need additional time
+- how can AI help with rigging and skinning, tedius work
++ want to ensure that artists have time to work on the 
+dynamicisim in NPCs and NPC interactions.
+- Holy grail, infinite quests and infinite dialouges
+    - Is that what people want?
+    - may not be that interesting
+    - replayability is key, not just infiite content
+    - AI leveraging libraries for bigger world interactions
+    - too much for a mobile game.
+- MUD is a prime real estate for LLMs 
+- building this out as a prototype, with on device LLM 
+- Existing teams with generative tooling
+
+
+impact estimate
+- estimated time from start to end of production from concept to final model (days, hours, man hours) x number of characters in a year.
+
+x-team interaction? come to Steven Lin
+ID tool and costs to improve. 
+Time savings, value savings, 
+ until such a thing. Research spikes
+ entire pipeline, revenue 
+
+ what drew you to join this project
+ Data scientist, at nearby University. Non profit, slower workspace.
+ joined as community amanager
+
+ Startups are an enviornment where you can get as much as you put in. 
+ LF people to step up and ask for forgiveness rather than permission
+ hopped between departments 2.5 years ago. CTO was enthusiastic about the technology. 
+
+ B/C of generative AI were about to find areas where able to find good places to integrate gen AI into the pipelines.
+ Still here b/c - leadership team is trusting and buying into an unknown and unproven tool. To push the way an industry works, have to be fine with mistakes and use them to learn where to go. Env where it's okay to mess up and fail. Failure is just an indicator you're going the right direction. 
+
+ I love trying things that no one else has done before. No no ideas, but new combinations of ideas. 
+
+Used - 
+ Vector BD, RAG, 
+ currently using Claude
+ Structed data?
+
+ Want to create a pipeline
+ can take in any quests, dialouge, narrative - work as a QA narrative agent to ensure that narrative dialouges make sense. Then create those dialouges and build out. 
+
+ End goal is Agents
+ - 2d / 3d process is mostly manual
+ would love to train up models / agents to create the content.
+ agents can only work if the pipeline is in place
+
+ Is there internal fiction to adding agents to the pipeline?
+ After working with both artists, designers and writers - have realized it's a big supplament to their existing skill sets. AI can do, they are needed for what AI can not do at the moment. 
+
+ Writers - haven't have the oportunity to work with genAI. They don't check out the text genration models. Takes different personality types to seek out ways to do something new that they have been doing professionally for 10+ years. 
+
+ How to incorportate that into the pipelines. work with managers to incoportate 
+
+Next - Mike Odem / Ode
+
+
+Mike Odie
+
+Sacramento, cold int he morning, mists
+Software Eng all his life, Comedore 64 as a kid, iPhone dev, in games off and on most of his carreer  
+On the weird projects , performaence to make a demo
+Collaborate with Steven Lin on what can be done. 
+Using an Animation GPT to try and animate the cahracters
+
+training a lora woul be part of the role
+SD can create the angles
+Kadem will generate 3d from the images, nearly end to end
+- been working with them for a year
+- 2H to 1d turn aorund on a concept art to model. 
+
+Exploring animation models  - text to animation, not great
+vtuber models are solid, profitable
+full body motion is difficult to do. 
+
+currently preparing for when stuff is ready < note: may not be aware of the technology options that exist for this >
+
+Genshin was one of the prototypes, strayed from it. SImilar concept. 
+RPG stuff, characters with dialouge. May reference same lore and same concepts. 
+How to generate massive numbers of characters locally. 
+"InWorld" has a demo for character generation 
+Tailored ot the existing character. 
+
+* characters, what they know /belive about the world. Game still happens inside the player. 
+
+
+Travis Boudreaux - Culture Interview
+Been traveling every week
+Sac, Aus, NoCaolina, Louisiana Home base
+Sacramento a bit of a haul. 8 hour day b/c of layover
+
+bg. technical art type?
+
+likes, people who learn programming them selves
+- enjoyes the curiosoity of that type of person
+? 
+process 40->7 art days with generative ai / rigged
+VFX and animations in generative AI, heaviest part
+
+ability system in UNity, similar to blueprints in Unreal 
+<combat abilities + vfx+ animation> 
+hope: no solutions yet/ profucts for it
+generative sound FX < text to sound fx > <voice/text to speech> <voice + text guidance to sound fx>
+? wand bursting vfx -> vfx wiht colors to match motion
+wants to see something like this^
+AnimateGPT? / AnimationGPT? 10,000 animations to library, fine tuned + combat animations <text to animation>
+designers picked mixamo over opsive/animategpt
+Games: creature collector & dark fantasy action rpg
+<dark fae deals qreck civilization> 
+graphic game:
+opening scene, game of thrones esq - brothels and whore houses, scantily clad ladies, editors cut on pc with more nudity
+X rated / xxx rated sex scenes, pushed off due to mobile
+swamp of sacrified babies, not quite a bridge too far 
+These topics are intended to spark debate about hard topics. 
+"i know lots of people with lots of different world views" "i don't know 
+> draw attention, catch attention, keep attention
+"free earned media from provocative content"
+> be the hero that can bring order to this dark, chaotic world, bring altruisim to selfish 
+writers, 
+- married asian 2 kids
+-texas libertarian
+- AA gay guy from LA
+goal: take away - intention to offend, not anyone, everyone {t:note - this is not a project to popularize could loose friends over it}
+how to combine the best of proc gen with gen AI to reduce costs at Scale in the priduction proces
+4-5 action RPGs at AAA quality over 10 years, first costs 70 million. How to optimize so next costs 35, 17,8,4,2 ect. 
+
+Not deep tech, leveraging experience to build games using existing technology with agressive use of genAI tech. 
+
+"Disrupt WesternRPG making."
+goal to compres cost curve down to accelerate development, goal 2032 dark fantasty character character collector "agressive" / offensive power fantasy for GoW
+then defensive fantasy " souls like"
+distribution across playstyles to capture a wide portion of the market. 
+
+LABS research new things as they drop to drive production pipline. 
+How to use SORA/Video Models to improve 2d-> 3d models 
+
+production: Hybrid generative AI + proc gen
+
+Goal: building a studio which can create games at lower and lower cost.
+
+Most will not be good enough, will require persistance to figure out if it can saves teh boring time and gives artists time to do the interesting / creative work. Can be a long time without wins. THen
