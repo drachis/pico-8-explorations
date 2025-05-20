@@ -6,6 +6,23 @@ function _init()
     time = 0 
 end
 
+slug = {
+    spr = 010,
+    x = 8*2,
+    y = 8*9,
+    crop_x =1,
+    crop_y =1,
+    flipX = false,
+    flipY = false,
+    dx = 0.0,
+    dy = 0.0,
+    friction = 0.02,
+    bounce = 1,
+    w=0.4,
+    h=0.4
+}
+
+
 function _draw()
     cls(1)
     --map tiles
@@ -16,8 +33,6 @@ function _draw()
     map(0,3, 0,8*15, 16,1)
     -- treasure chest
     spr(05, 8*13+2,8*9+3, 2,2, true,false)
-    --slugy
-    spr(010, 8*2, 8*9, 1,1, false,false)
     -- bottom dither
     for x=0, 128, 1 do
         for y=8*12 , 128, 1 do
@@ -25,7 +40,7 @@ function _draw()
                 if y%2==0 then
                     pset(x,y,12)
                 end
-                else    
+            else    
                 if (y+1)%2==0 then
                     pset(x,y,12)
                 end
@@ -38,20 +53,20 @@ function _draw()
             pset(
                 x,
                 48 + 
-                    sin(time/32+x/96)*2 +
-                    sin(time/48+x/48)*4 -
-                    sin(time/24+x/48)*3 -
-                    y
-             , 08+y/5)
+                sin(time/32+x/96)*2 +
+                sin(time/48+x/48)*4 -
+                sin(time/24+x/48)*3 -
+                y
+                , 08+y/5)
+            end
         end
-    end
-    -- top dither
-    for x=128, 0, -1 do
-        for y=8*8 , 0, -1 do
-            if x%2==0 then
-                if y%2==0 then
-                    pset(x,y,1)
-                end
+        -- top dither
+        for x=128, 0, -1 do
+            for y=8*8 , 0, -1 do
+                if x%2==0 then
+                    if y%2==0 then
+                        pset(x,y,1)
+                    end
                 else    
                 if (y+1)%2==0 then
                     pset(x,y,1)
@@ -59,11 +74,23 @@ function _draw()
             end
         end
     end
-     
+    --slugy
+    spr(slug.spr, slug.x, slug.y, slug.crop_x,slug.crop_y, slug.flipX,slug.flipY)
+    
 end
 
 function _update()
     time += 0.25
+    slug_control(slug)
+end
+
+function slug_control(_slug)
+    accel = 3
+	if (btn(0)) _slug.x -= accel 
+	if (btn(1)) _slug.x += accel 
+	if (btn(2)) _slug.y -= accel 
+	if (btn(3)) _slug.y += accel
+
 end
 
 __gfx__
