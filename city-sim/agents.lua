@@ -17,17 +17,31 @@ function spawn_agent()
 
     if #residential_zones > 0 and #agents < max_agents then
         local chosen_zone = residential_zones[flr(rnd(#residential_zones)) + 1] -- Randomly select a residential zone
-        add(agents, {x=chosen_zone.x, y=chosen_zone.y, home_x=chosen_zone.x, home_y=chosen_zone.y, type="builder", target=nil, move_timer=0, work_x=nil, work_y=nil, path=nil})
+        add(agents, {x=chosen_zone.x, y=chosen_zone.y, home=chosen_zone, type="builder", target=nil, move_timer=0, work_x=nil, work_y=nil, path=nil})
         map_grid[chosen_zone.y][chosen_zone.x] = 6 -- Mark as filled in residential (bright green)
     end
 end
 
 function move_along_path(agent)
-    if agent.path and #agent.path > 0 then
-        local next_step = agent.path[#agent.path] -- Get the last element (next step)
-        agent.x = next_step.x
-        agent.y = next_step.y
-        del(agent.path, next_step) -- Remove the last element
+    if not agent.path or #agent.path == 0 then 
+        return
+     end -- No path or empty path, do nothing
+    
+     local direction = 1
+    if agent.direction then -- If we're moving backwards, reverse the direction
+        direction = 1
+    elseif
+        direction = -1 --backwards
+    end
+    
+    agent.index = agent.index + direction
+    if agent.direction == true and agent.index < #agent.path - 1 or
+        agent.direction == false and agent.index != 0 then
+        local pos = agent.path[agent.index]
+        agent.x = pos[1]
+        agent.y = pos[2]
+    elseif agent.index == #agent.path or agent.index == 0 and agent.direction == fasle then -- If we're at the first or last position in the path, reverse the direction
+        agent.direction != agent.direction 
     end
 end
 
@@ -50,25 +64,11 @@ function update_agents()
                 end
             end
 
-            if agent.target == nil then
+            if agent.target == nil and is_adjacent_to_road(agent.x, agent.y) then
                 -- Find the nearest road
-                local nearest_distance = 9999
-                local nearest_road = nil
-                for y=1, map_height do
-                    for x=1, map_width do
-                        if map_grid[y][x] == 4 then -- Road
-                            local distance = abs(agent.x - x) + abs(agent.y - y)
-                            if distance < nearest_distance then
-                                nearest_distance = distance
-                                nearest_road = {x=x, y=y}
-                            end
-                        end
-                    end
-                end
-                if nearest_road then
-                    agent.target = nearest_road
-                    agent.path = find_path(agent.x, agent.y, nearest_road.x, nearest_road.y, map_grid)
-                end
+                local nearest_distance = 128
+                agent.target = nearest_road
+                agent.path = find_path(agent.x, agent.y, nearest_road.x, nearest_road.y, map_grid)
             else
                 -- Move along the path
                 move_along_path(agent)
@@ -104,19 +104,19 @@ function update_agents()
                             agent.type = "worker"
                             agent.work_x = agent.target.x
                             agent.work_y = agent.target.y
-                            agent.target = {x=agent.home_x, y=agent.home_y} -- Return home
-                            agent.path = find_path(agent.x, agent.y, agent.home_x, agent.home_y, map_grid)
+                            agent.target = {x=agent.home.x, y=agent.home.y} -- Return home
+                            agent.path = find_path(agent.x, agent.y, agent.home.x, agent.home.y, map_grid)
                         end
                     elseif agent.type == "worker" then
                         -- Worker moves between home and work
-                        if agent.x == agent.home_x and agent.y == agent.home_y then
+                        if agent.x == agent.home.x and agent.y == agent.home.y then
                             -- At home, set target to work
                             agent.target = {x=agent.work_x, y=agent.work_y}
                             agent.path = find_path(agent.x, agent.y, agent.work_x, agent.work_y, map_grid)
                         elseif agent.x == agent.work_x and agent.y == agent.work_y then
                             -- At work, set target to home
-                            agent.target = {x=agent.home_x, y=agent.home_y}
-                            agent.path = find_path(agent.x, agent.y, agent.home_x, agent.home_y, map_grid)
+                            agent.target = {x=agent.home.x, y=agent.home.y}
+                            agent.path = find_path(agent.x, agent.y, agent.home.x, agent.home.y, map_grid)
                         end
                     end
                 end
@@ -125,11 +125,32 @@ function update_agents()
     end
 end
 
-function is_adjacent_to_road(x, y)
-    return (x > 1 and map_grid[y][x-1] == 4) or
-           (x < map_width and map_grid[y][x+1] == 4) or
-           (y > 1 and map_grid[y-1][x] == 4) or
-           (y < map_height and map_grid[y+1][x] == 4)
+function get_nearest_zone(x, y, map_grid)
+    local min_distance = 128
+    local nearest_zone
+
+    for i = 1, map_height do
+        for j = 1, map_width do
+            if (map_grid[i][j] == 2 or map_grid[i][j] == 3) then -- Commercial or Industrial zone
+                local distance = abs(x - j) + abs(y - i)
+                if distance < min_distance then
+                    min_distance = distance
+                    nearest_zone = {x = j, y = i}
+                end
+            elseif (map_grid[i][j] == 1) then -- Residential zone
+                local distance = abs(x - j) + abs(y - i)
+                if distance < min_distance then
+                    min_distance = distance
+                    nearest_zone = {x = j, y = i}
+                end
+            end
+        end
+    end
+            elseif map_grid[i][j] == 4 then -- Road
+                return {x = j, y = i}
+            end
+
+    return nearest_zone
 end
 
 function draw_agents()
