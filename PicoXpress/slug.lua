@@ -1,3 +1,21 @@
+-- Initialize global slug data structure with slime trail storage
+slug = {
+    spr = 10,
+    x = 8*2,
+    y = 8*9,
+    crop_x =1,
+    crop_y =1,
+    flipX = false,
+    flipY = false,
+    dx = 0.0,
+    dy = 0.0,
+    friction = 0.02,
+    bounce = 1,
+    w=0.4,
+    h=0.4,
+    slime_trail = {} -- Storage for slime trail pixels
+}
+
 function slug_control(_slug)
     local accel = 3
     local max_speed = 10
@@ -55,10 +73,15 @@ function slug_control(_slug)
 
     -- Draw slime trail
     if (_slug.sliding) then
-        for i = 1, 5 do
-            local x_offset = math.random(-2, 2)
-            local y_offset = math.random(-2, 2)
-            spr(1, _slug.x + x_offset, _slug.y + y_offset) -- Assuming sprite 1 is the slime trail sprite
-        end
+        add(_slug.slime_trail, 
+        {x = _slug.x, y = _slug.y}
+    )
+    end
+end
+
+function draw_slime_trail()
+    local slime_color = 12 -- Choose a color for the slime trail
+    for _, pos in ipairs(slug.slime_trail) do
+        pset(pos.x, pos.y, slime_color)
     end
 end
