@@ -1,6 +1,6 @@
 -- Initialize global slug data structure with slime trail storage
 slug = {
-    spr = 10,
+    spr = 64,
     x = 8*2,
     y = 8*9,
     crop_x =1,
