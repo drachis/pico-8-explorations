@@ -18,7 +18,7 @@ function _draw()
     map(0,3, 0,8*14, 16,1)
     map(0,3, 0,8*15, 16,1)
     -- treasure chest
-    spr(05, 8*13+2,8*9+3, 2,2, true,false)
+    spr(46, 8*13+2,8*9+3, 2,2, true,false)
     -- bottom dither
     for x=0, 128, 1 do
         for y=8*12 , 128, 1 do
